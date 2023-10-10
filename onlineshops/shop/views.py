@@ -8,6 +8,7 @@ from .utils import DataMixin
 #from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, FormView
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.cache import cache
 
 
 class ContactFormView(DataMixin, FormView):
@@ -102,15 +103,81 @@ class ShopCategory(DataMixin, ListView):
 
 
 
+# Страница с корзиной.
+def basket_view(request):
+    context = dict()
+    context['categories'] = get_categories()
+    basket = get_basket(get_sid(request))
+    context['basket'] = ItemInBasket.objects.filter(basket=basket).select_related('product')
+    return render(request, 'shop/basket.html', context=context)
 
-class Basket(ListView):
-    model = Shop
-    template_name = 'shop/basket.html'
-    context_object_name = 'product'
+
+# Добавляет отзыв к указанному товару
+def add_review(request, product_id):
+    form = AddReview(request.POST)
+    if form.is_valid():
+        Review.objects.create(name=form.cleaned_data['name'], text=form.cleaned_data['text'],
+                              star=form.cleaned_data['star'], item=Shop.objects.get(id=product_id))
+    return redirect('product', id=product_id)
 
 
-    def get_basket(sid):
-        basket, created = Basket.objects.get_or_create(sid=sid)
-        return basket
+# Добавляет товар нужным ID в корзину
+def to_basket(request, product_id):
+    basket = get_basket(get_sid(request))
+    product = Shop.objects.get(id=product_id)
+
+    product_in_basket = ItemInBasket.objects.filter(basket=basket, item=product)
+
+    if product_in_basket:
+        my_obj = product_in_basket.first()
+        my_obj.count += 1
+        my_obj.save()
+    else:
+        ItemInBasket.objects.create(basket=basket, item=product, count=1)
+
+    return redirect(basket_view)
+
+
+# Оформление заказа:
+# 1) Получаем корзину исходя из ID сессии / username
+# 2) Получаем все товары из корзины. Если их не 0:
+# 3) Создаём заказ
+# *iib означаем product in basket
+def create_order(request):
+    basket = get_basket(get_sid(request))
+    products = basket.items.all()
+
+    if products:
+        order = Order.objects.create(owner=get_sid(request))
+        for product in products:
+            iib = ItemInBasket.objects.get(item=product, basket=basket)
+            ItemInOrder.objects.create(item=product, order=order, count=iib.count)
+            iib.delete()
+    return redirect('index')
+
+
+# Находим или создаём новую корзину
+def get_basket(sid):
+    basket, created = Basket.objects.get_or_create(sid=sid)
+    return basket
+
+
+
+# Получаем имя пользователя (если авторизован) или его ID сессии
+def get_sid(request):
+    if not request.user.is_authenticated:
+        sid = request.session.session_key
+        if not sid:
+            sid = request.session.cycle_key()
+    else:
+        sid = request.user.username
+    return sid
+
+
+# Получаем из кэша категории для меню. Если кэша нет, записываем их туда
+def get_categories():
+    categories = cache.get_or_set('categories', Category.objects.filter(name=True), 3600)
+    return categories
+
 
 

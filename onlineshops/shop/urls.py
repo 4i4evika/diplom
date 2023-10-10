@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 from django.contrib.auth.views import LogoutView
+from shop import views
 
 urlpatterns = [
     path('', ShopHome.as_view(), name='index'),
@@ -10,5 +11,7 @@ urlpatterns = [
     path('login/', LoginUser.as_view(), name='login'),
     path('logout/', LogoutView.as_view(template_name='shop/logout.html'), name='logout'),
     path('contacts/', ContactFormView.as_view(), name='contacts'),
-    path('basket/', Basket.as_view(), name='basket'),
+    path('product/<product_id>/add_review', views.add_review, name='add_review'),
+    path('product/<product_id>/to_basket', views.to_basket, name='to_basket'),
+    path('basket/', views.basket_view, name='basket_view'),
 ]

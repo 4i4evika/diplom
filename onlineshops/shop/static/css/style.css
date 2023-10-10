@@ -111,6 +111,17 @@ button{
     margin-left: 55px;
     cursor: pointer;
 }
+input{
+    background: #cdbccd;
+    border: 2px solid #cdbccd;
+    width: 20%;
+    padding: 20px;
+    font-size: 20px;
+    cursor: pointer;
+}
+input:hover{
+    color: #c67fb7;
+}
 form label{
     margin-left: 15px;
     font-size: 18px;

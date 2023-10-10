@@ -36,16 +36,36 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
 
 
-
+class Review(models.Model):
+    name = models.CharField(max_length=150)
+    text = models.TextField()
+    star = models.IntegerField()
+    product = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='reviews')
 
 
 class Basket(models.Model):
     sid = models.CharField(max_length=150, blank=True, null=True)
     username = models.CharField(max_length=150, blank=True, null=True)
-    product = models.ManyToManyField(Shop, through='ProductInBasket', related_name='basket')
+    product = models.ManyToManyField(Shop, through='ItemInBasket', related_name='basket')
 
 
-class ProductInBasket(models.Model):
+class ItemInBasket(models.Model):
     product = models.ForeignKey(Shop, on_delete=models.CASCADE)
     basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
+    count = models.IntegerField()
+
+
+class Order(models.Model):
+    product = models.ManyToManyField(Shop, through='ItemInOrder')
+    owner = models.CharField(max_length=150, default='no owner')
+
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+        ordering = ['id']
+
+
+class ItemInOrder(models.Model):
+    product = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     count = models.IntegerField()

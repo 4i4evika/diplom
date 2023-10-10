@@ -3,7 +3,7 @@ from django.db.models import Count
 
 
 menu = [
-    {'title': 'Корзина', 'url_name': 'basket'},
+    #{'title': 'Корзина', 'url_name': 'index'},
     {'title': 'Обратная связь', 'url_name': 'contacts'},
     #{'title': 'Войти', 'url_name': 'login'},
     #{'title': 'Регистрация', 'url_name': 'register'},
