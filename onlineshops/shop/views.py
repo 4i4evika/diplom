@@ -22,7 +22,7 @@ class ContactFormView(DataMixin, FormView):
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
-        print(form.cleaned_data)
+        #print(form.cleaned_data)
         return redirect('index')
 
 
@@ -117,7 +117,7 @@ def add_review(request, product_id):
     form = AddReview(request.POST)
     if form.is_valid():
         Review.objects.create(name=form.cleaned_data['name'], text=form.cleaned_data['text'],
-                              star=form.cleaned_data['star'], item=Shop.objects.get(id=product_id))
+                              star=form.cleaned_data['star'], product=Shop.objects.get(id=product_id))
     return redirect('product', id=product_id)
 
 
@@ -126,14 +126,14 @@ def to_basket(request, product_id):
     basket = get_basket(get_sid(request))
     product = Shop.objects.get(id=product_id)
 
-    product_in_basket = ItemInBasket.objects.filter(basket=basket, item=product)
+    product_in_basket = ItemInBasket.objects.filter(basket=basket, product=product)
 
     if product_in_basket:
         my_obj = product_in_basket.first()
         my_obj.count += 1
         my_obj.save()
     else:
-        ItemInBasket.objects.create(basket=basket, item=product, count=1)
+        ItemInBasket.objects.create(basket=basket, product=product, count=1)
 
     return redirect(basket_view)
 
@@ -142,17 +142,17 @@ def to_basket(request, product_id):
 # 1) Получаем корзину исходя из ID сессии / username
 # 2) Получаем все товары из корзины. Если их не 0:
 # 3) Создаём заказ
-# *iib означаем product in basket
+# *pib означаем product in basket
 def create_order(request):
     basket = get_basket(get_sid(request))
-    products = basket.items.all()
+    products = basket.product.all()
 
     if products:
         order = Order.objects.create(owner=get_sid(request))
         for product in products:
-            iib = ItemInBasket.objects.get(item=product, basket=basket)
-            ItemInOrder.objects.create(item=product, order=order, count=iib.count)
-            iib.delete()
+            pib = ItemInBasket.objects.get(product=product, basket=basket)
+            ItemInOrder.objects.create(product=product, order=order, count=pib.count)
+            pib.delete()
     return redirect('index')
 
 
