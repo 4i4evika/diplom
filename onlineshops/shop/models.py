@@ -57,7 +57,7 @@ class ItemInBasket(models.Model):
 
 class Order(models.Model):
     product = models.ManyToManyField(Shop, through='ItemInOrder')
-    owner = models.CharField(max_length=150, default='no owner')
+    owner = models.CharField(max_length=150, default='create_order')
 
     class Meta:
         verbose_name = "Заказ"

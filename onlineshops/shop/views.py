@@ -22,7 +22,6 @@ class ContactFormView(DataMixin, FormView):
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
-        #print(form.cleaned_data)
         return redirect('index')
 
 
@@ -53,10 +52,6 @@ class RegisterUser(DataMixin, CreateView):
         return redirect('index')
 
 
-#menu = [
-#    {'title': 'Корзина', 'url_name': 'index'},
-#    {'title': 'Войти', 'url_name': 'index'},
-#]
 class ShopHome(DataMixin, ListView):
     model = Shop
     template_name = 'shop/index.html'
@@ -65,7 +60,7 @@ class ShopHome(DataMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Главная страница')
+        c_def = self.get_user_context(title='Товары всех категорий')
         return dict(list(context.items()) + list(c_def.items()))
 
 def get_queryset(self):
@@ -113,12 +108,12 @@ def basket_view(request):
 
 
 # Добавляет отзыв к указанному товару
-def add_review(request, product_id):
-    form = AddReview(request.POST)
-    if form.is_valid():
-        Review.objects.create(name=form.cleaned_data['name'], text=form.cleaned_data['text'],
-                              star=form.cleaned_data['star'], product=Shop.objects.get(id=product_id))
-    return redirect('product', id=product_id)
+#def add_review(request, product_id):
+#    form = AddReview(request.POST)
+#    if form.is_valid():
+#        Review.objects.create(name=form.cleaned_data['name'], text=form.cleaned_data['text'],
+#                              star=form.cleaned_data['star'], product=Shop.objects.get(id=product_id))
+#    return redirect('index')
 
 
 # Добавляет товар нужным ID в корзину
@@ -153,7 +148,7 @@ def create_order(request):
             pib = ItemInBasket.objects.get(product=product, basket=basket)
             ItemInOrder.objects.create(product=product, order=order, count=pib.count)
             pib.delete()
-    return redirect('index')
+    return render(request, 'shop/create_order.html')
 
 
 # Находим или создаём новую корзину

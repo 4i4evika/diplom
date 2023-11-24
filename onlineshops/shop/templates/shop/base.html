@@ -54,10 +54,8 @@
                             <li class="page_num page-num-selected">
                                 {{ p }}
                             </li>
-                        {% elif p > page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
-                            <li class="page_num"><a href="?page={{ p }}"></a>
-                                {{ p }}
-                            </li>
+                        {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                            <li class="page_num"><a href="?page={{ p }}">{{ p }}</a></li>
                         {% endif %}
                     {% endfor %}
                     {% if page_obj.has_next %}
