@@ -72,20 +72,20 @@ class ItemInOrder(models.Model):
     count = models.IntegerField()
 
 
-class Comment(models.Model):
-    post = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='comments', verbose_name='Товар')
-    name = models.CharField(max_length=80, verbose_name='Имя')
-    body = models.TextField(verbose_name='Комментарий')
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
+#class Comment(models.Model):
+#    post = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='comments', verbose_name='Товар')
+#    name = models.CharField(max_length=80, verbose_name='Имя')
+#    body = models.TextField(verbose_name='Комментарий')
+#    created = models.DateTimeField(auto_now_add=True)
+#    updated = models.DateTimeField(auto_now=True)
+#    active = models.BooleanField(default=True)
 
-    class Meta:
-        verbose_name = "Комментарий"
-        verbose_name_plural = "Комментарии"
-        ordering = ('created',)
+#    class Meta:
+#        verbose_name = "Комментарий"
+#        verbose_name_plural = "Комментарии"
+#        ordering = ('created',)
 
-    def __str__(self):
-        return 'Comment by {} on {}'.format(self.name, self.post)
+#    def __str__(self):
+#        return 'Comment by {} on {}'.format(self.name, self.post)
 
 

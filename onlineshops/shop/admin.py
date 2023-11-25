@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import *
-from .models import Comment
+#from .models import Comment
 
 
 class ShopAdmin(admin.ModelAdmin):
@@ -19,12 +19,12 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'post', 'created', 'active')
-    list_filter = ('active', 'created', 'updated')
-    search_fields = ('name', 'body')
+#class CommentAdmin(admin.ModelAdmin):
+#    list_display = ('name', 'post', 'created', 'active')
+#    list_filter = ('active', 'created', 'updated')
+#    search_fields = ('name', 'body')
 
 
 admin.site.register(Shop, ShopAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Comment, CommentAdmin)
+#admin.site.register(Comment, CommentAdmin)

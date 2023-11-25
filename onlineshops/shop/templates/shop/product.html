@@ -11,7 +11,7 @@
         <input type="submit" class="btn btn-secondary" value="Добавить в корзину">
 </form>
 
-{% with comments.count as total_comments %}
+<!--{% with comments.count as total_comments %}
     <h4>
         {{ total_comments }} Комментарии{{ total_comments|pluralize }}
     </h4>
@@ -31,13 +31,11 @@
 {% else %}
 
     <form action="add_review" method="post">
+        {% csrf_token %}
     <label>Добавьте комментарий: </label>
     <input id="add_review" type="text" name="add_review">
     <input type="submit" value="Отправить комментарий">
 </form>
-{% endif %}
-
-
-
+{% endif %}-->
 
 {% endblock %}
