@@ -9,6 +9,8 @@ from .utils import DataMixin
 from django.contrib.auth.views import LoginView, FormView
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.cache import cache
+from .models import Comment
+from .forms import CommentForm
 
 
 class ContactFormView(DataMixin, FormView):
@@ -108,12 +110,30 @@ def basket_view(request):
 
 
 # Добавляет отзыв к указанному товару
-#def add_review(request, product_id):
-#    form = AddReview(request.POST)
-#    if form.is_valid():
-#        Review.objects.create(name=form.cleaned_data['name'], text=form.cleaned_data['text'],
-#                              star=form.cleaned_data['star'], product=Shop.objects.get(id=product_id))
-#    return redirect('index')
+def add_review(request, product_id):
+    form = AddReview(request.POST)
+    if form.is_valid():
+        Review.objects.create(name=form.cleaned_data['name'], text=form.cleaned_data['text'],
+                              star=form.cleaned_data['star'], product=Shop.objects.get(id=product_id))
+    comments = product_id.comments.filter(active=True)
+
+    if request.method == 'POST':
+        # A comment was posted
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            # Create Comment object but don't save to database yet
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post = product_id
+            # Save the comment to the database
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+    return render(request,
+                   'add_review.html',
+                  {'post': product_id,
+                   'comments': comments,
+                   'comment_form': comment_form})
 
 
 # Добавляет товар нужным ID в корзину

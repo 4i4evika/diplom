@@ -9,7 +9,7 @@ body{
     margin: 0 auto;
 }
 .content .wrap{
-    background: #FFF;
+    background: #fff0f5;
     padding: 40px;
     box-sizing: border-box;
     display: flex;
@@ -47,7 +47,7 @@ a:hover{
     border: 1px solid #FFF;
     background: #cdbccd;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 15px;
 }
 .selected{
     font-size: 18px;
@@ -57,11 +57,17 @@ a:hover{
     background: #a194a1;
 }
 .main li{
-    border: 1px solid #a194a1;
+    color: #a194a1;
+    margin-left: 20px;
     margin-bottom: 40px;
+    background: #fff;
 }
 .main h1{
+    color: #800000;
     text-align: center;
+}
+.main span{
+    padding: 10px 20px;
 }
 .first, .date{
     padding: 10px 20px;
@@ -87,6 +93,9 @@ a:hover{
 }
 .text a:hover{
     color: #a194a1;
+}
+.text p{
+    white-space: pre-line;
 }
 .post h1{
     margin-top: 0;
@@ -136,7 +145,7 @@ form button{
     padding: 20px;
 }
 .list-pages a{
-    background: #81d4fa;
+    background: #c67fb7;
     padding: 20px;
     display: block;
     color: #FFF;
@@ -164,4 +173,7 @@ label{
 #id_cat{
     font-size: 20px;
     padding: 4px;
+}
+h4{
+    padding: 20px;
 }

@@ -4,11 +4,40 @@
 <div class="text">
         <h3>{{ product.title }}</h3>
         <p>{{ product.description }}</p>
-        <p style="color: #cdbccd">Цена: {{ product.price }}</p>
+        <p style="color: #800000">Цена: {{ product.price }}</p>
 </div>
+
 <form action="{% url 'to_basket' product_id=product.id %}" method="get">
         <input type="submit" class="btn btn-secondary" value="Добавить в корзину">
 </form>
+
+{% with comments.count as total_comments %}
+    <h4>
+        {{ total_comments }} Комментарии{{ total_comments|pluralize }}
+    </h4>
+{% endwith %}
+{% for comment in comments %}
+    <div class="comment">
+        <p class="info">
+            Комментарий {{ forloop.counter }} от {{ comment.name }}
+            {{ comment.created }}
+        </p>
+        {{ comment.body|linebreaks }}
+    </div>
+
+{% endfor %}
+{% if new_comment %}
+    <h2>Ваш комментарий добавлен</h2>
+{% else %}
+
+    <form action="add_review" method="post">
+    <label>Добавьте комментарий: </label>
+    <input id="add_review" type="text" name="add_review">
+    <input type="submit" value="Отправить комментарий">
+</form>
+{% endif %}
+
+
 
 
 {% endblock %}

@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from captcha.fields import CaptchaField
+from .models import Comment
 
 
 class ContactForm(forms.Form):
@@ -34,3 +35,12 @@ class AddReview(forms.Form):
                            label='Содержание', required=True)
     star = forms.ChoiceField(choices=[(j, j) for j in range(1, 6)],
                              widget=forms.RadioSelect(attrs={'class': 'form-check-input'}), required=True)
+
+
+class CommentForm(forms.ModelForm):
+    name = forms.CharField(label='Имя', max_length=200)
+    content = forms.CharField(label='Сообщение',
+                              widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
+    #class Meta:
+    #    model = Comment
+    #    fields = ('name', 'body')

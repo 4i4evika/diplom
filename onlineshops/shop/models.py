@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
+
 class Shop(models.Model):
     title = models.CharField(max_length=200, verbose_name='Наименование')
     slug = models.SlugField(max_length=255, unique=True, verbose_name='Ссылка')
@@ -69,3 +70,22 @@ class ItemInOrder(models.Model):
     product = models.ForeignKey(Shop, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     count = models.IntegerField()
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='comments', verbose_name='Товар')
+    name = models.CharField(max_length=80, verbose_name='Имя')
+    body = models.TextField(verbose_name='Комментарий')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
+        ordering = ('created',)
+
+    def __str__(self):
+        return 'Comment by {} on {}'.format(self.name, self.post)
+
+
